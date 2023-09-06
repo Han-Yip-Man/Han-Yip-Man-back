@@ -1,5 +1,6 @@
 package com.supercoding.hanyipman.controller;
 
+import com.supercoding.hanyipman.advice.annotation.TimeTrace;
 import com.supercoding.hanyipman.dto.myInfo.response.MyInfoResponse;
 import com.supercoding.hanyipman.dto.user.CustomUserDetail;
 import com.supercoding.hanyipman.dto.vo.Response;
@@ -35,6 +36,7 @@ public class MyInfoController {
     private final UserRepository userRepository;
 
 
+    @TimeTrace
     @GetMapping("/users/my-info")
     @Operation(summary = "구매자 마이페이지 API", description = "회원의 정보와 회원에 등록어 주소 리스트가 출력됩니다.")
     public Response<MyInfoResponse> buyerUserMyInfo() {
