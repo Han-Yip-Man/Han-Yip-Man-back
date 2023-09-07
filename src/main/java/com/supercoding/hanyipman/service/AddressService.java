@@ -32,8 +32,7 @@ public class AddressService {
     public String registerAddress(User user, AddressRegisterRequest request) {
         Integer limitAddress = 3; // 개인당 가질 수 있는 주소 갯수
         //Todo 주소 3개초과 등록 못함, 주소 빈값 검사
-        if (request.getAddress() == null || request.getAddressDetail() == null || request.getLatitude() == null || request.getLongitude() == null)
-            throw new CustomException(AddressErrorCode.EMPTY_ADDRESS_DATA);
+        requestNullCheck(request);
         Buyer buyerId = buyerRepository.findByUser(user);
         if (buyerId.getAddresses() == null) throw new CustomException(BuyerErrorCode.INVALID_BUYER);
         if (addressRepository.existsAllByAddress(request.getAddress()) >= 1)
@@ -48,6 +47,7 @@ public class AddressService {
         return save.getAddress();
     }
 
+    // Todo 주소 목록 조회
     @TimeTrace//9월7일 Total time = 0.083849917s
     @Transactional
     public List<AddressListResponse> getAddressList(User user) {
@@ -62,8 +62,29 @@ public class AddressService {
                 .map(AddressListResponse::toaAddressListResponse)
                 .collect(Collectors.toList());
     }
-    // Todo 주소 목록 조회
+
     // Todo 주소 수정
+    @Transactional
+    public Long patchAddress(User user, Long addressId, AddressRegisterRequest request) {
+        requestNullCheck(request);
+        Optional<Address> address = addressRepository.findByBuyerAndId(user.getBuyer(), addressId);
+        if (address.isEmpty()) throw new CustomException(AddressErrorCode.UNCHANGEABLE_ADDRESS);
+        patchSetAdd(address.get(), request);
+        return address.get().getId();
+    }
+
+    public void patchSetAdd(Address address, AddressRegisterRequest request) {
+        address.setAddress(request.getAddress());
+        address.setDetailAddress(request.getAddressDetail());
+        address.setLatitude(request.getLatitude());
+        address.setLongitude(request.getLongitude());
+    }
+
+    public void requestNullCheck(AddressRegisterRequest request) {
+        if (request.getAddress() == null || "".equals(request.getAddress()) || request.getAddressDetail() == null || "".equals(request.getAddressDetail()) || request.getLatitude() == null || "".equals(request.getLatitude()) || request.getLongitude() == null || "".equals(request.getLongitude()))
+            throw new CustomException(AddressErrorCode.EMPTY_ADDRESS_DATA);
+    }
+
     // Todo 주소 삭제
 }
 

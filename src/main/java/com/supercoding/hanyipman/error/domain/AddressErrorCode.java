@@ -13,6 +13,8 @@ public enum AddressErrorCode implements ErrorCode {
 
     DUPLICATE_ADDRESS(HttpStatus.CONFLICT.value(), "이미 등록되어 있는 주소입니다. 다른 주소를 입력해주세요."),
 
+    UNCHANGEABLE_ADDRESS(HttpStatus.BAD_REQUEST.value(), "변경할 수 없는 주소입니다."),
+
 
     ;
     private final int code;

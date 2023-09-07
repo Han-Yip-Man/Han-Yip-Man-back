@@ -10,6 +10,7 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AddressRepository extends JpaRepository<Address, Long> {
@@ -23,6 +24,8 @@ public interface AddressRepository extends JpaRepository<Address, Long> {
     @Query("select count(a) from Address a where a.address=:address")
     Integer existsAllByAddress(@Param("address") String address);
 
-    //    @Query("select a,b from Address a  JOIN FETCH Buyer b where a.buyer.id = :user")
-//    List<Address> findAllByGetAddressList(@Param("user") User user);
+
+    @Query("select a from Address a where a.buyer = ?1 and a.id = ?2")
+    Optional<Address> findByBuyerAndId(Buyer buyer, Long id);
+
 }
