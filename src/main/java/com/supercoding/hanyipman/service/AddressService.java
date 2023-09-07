@@ -12,12 +12,10 @@ import com.supercoding.hanyipman.error.domain.BuyerErrorCode;
 import com.supercoding.hanyipman.repository.AddressRepository;
 import com.supercoding.hanyipman.repository.BuyerRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -73,6 +71,18 @@ public class AddressService {
         return address.get().getId();
     }
 
+
+    // Todo 주소 삭제
+
+    @Transactional
+    public String sellerDeleteAddress(User user, Long addressId) {
+        Optional<Address> address = addressRepository.findByBuyerAndId(user.getBuyer(), addressId);
+        if (address.isEmpty()) throw new CustomException(AddressErrorCode.ADDRESS_NOT_FOUND);
+        addressRepository.deleteAddressByAddress(user.getBuyer(), address.get().getId());
+        return address.get().getAddress();
+
+    }
+
     public void patchSetAdd(Address address, AddressRegisterRequest request) {
         address.setAddress(request.getAddress());
         address.setDetailAddress(request.getAddressDetail());
@@ -81,11 +91,9 @@ public class AddressService {
     }
 
     public void requestNullCheck(AddressRegisterRequest request) {
-        if (request.getAddress() == null || "".equals(request.getAddress()) || request.getAddressDetail() == null || "".equals(request.getAddressDetail()) || request.getLatitude() == null || "".equals(request.getLatitude()) || request.getLongitude() == null || "".equals(request.getLongitude()))
+        if (request.getAddress() == null || "".equals(request.getAddress()) || request.getAddressDetail() == null || "".equals(request.getAddressDetail()) || request.getLatitude() == null || request.getLongitude() == null)
             throw new CustomException(AddressErrorCode.EMPTY_ADDRESS_DATA);
     }
-
-    // Todo 주소 삭제
 }
 
 
