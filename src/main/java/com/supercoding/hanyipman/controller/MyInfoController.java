@@ -30,8 +30,6 @@ public class MyInfoController {
 
     private final MyInfoService myInfoService;
 
-
-
     @TimeTrace
     @GetMapping(value = "/users/my-info",headers = "X-API-VERSION=1")
     @Operation(summary = "구매자 마이페이지 API", description = "회원의 정보와 회원에 등록어 주소 리스트가 출력됩니다.")

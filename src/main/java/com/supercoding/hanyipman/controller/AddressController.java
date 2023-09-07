@@ -29,7 +29,7 @@ public class AddressController {
     public Response<String> registerAddress(AddressRegisterRequest addressRegisterRequest) {
         String saveAddress = addressService.registerAddress(JwtToken.user(), addressRegisterRequest);
 
-        return ApiUtils.success(HttpStatus.OK, saveAddress + " 주소가 추가되었습니다.", null);
+        return ApiUtils.success(HttpStatus.CREATED, saveAddress + " 주소가 추가되었습니다.", null);
     }
 
     // Todo 주소 목록 조회
@@ -40,16 +40,16 @@ public class AddressController {
     }
 
     // Todo 주소 수정
-    @PatchMapping(value = "/{address_id}",headers = "X-API-VERSION=1")
+    @PatchMapping(value = "/{address_id}", headers = "X-API-VERSION=1")
     public Response<String> patchAddress(@PathVariable("address_id") Long addressId, AddressRegisterRequest addressRegisterRequest) {
         Long patchId = addressService.patchAddress(JwtToken.user(), addressId, addressRegisterRequest);
         return ApiUtils.success(HttpStatus.OK, patchId + "번 주소가 수정되었습니다.", null);
     }
 
     // Todo 주소 삭제
-    @DeleteMapping(value = "/{address_id}",headers = "X-API-VERSION=1")
+    @DeleteMapping(value = "/{address_id}", headers = "X-API-VERSION=1")
     public Response<String> sellerDeleteAddress(@PathVariable("address_id") Long addressId) {
         String deleteAddress = addressService.sellerDeleteAddress(JwtToken.user(), addressId);
-        return ApiUtils.success(HttpStatus.OK, deleteAddress + " 주소 삭제 완료", null);
+        return ApiUtils.success(HttpStatus.NO_CONTENT, deleteAddress + " 주소 삭제 완료", null);
     }
 }
