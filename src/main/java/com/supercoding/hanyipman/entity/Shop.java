@@ -18,7 +18,6 @@ import java.util.Objects;
 @AllArgsConstructor
 @Builder
 @Entity
-@Setter
 @DynamicInsert
 @DynamicUpdate
 @SQLDelete(sql = "UPDATE shop SET is_deleted = true WHERE id = ?")
@@ -57,10 +56,12 @@ public class Shop {
     private String businessNumber;
 
     @Lob
+    @Setter
     @Column(name = "thumbnail")
     private String thumbnail;
 
     @Lob
+    @Setter
     @Column(name = "banner")
     private String banner;
 
